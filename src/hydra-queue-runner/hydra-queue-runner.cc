@@ -95,7 +95,7 @@ State::State()
 
     /* handle deprecated store specification */
     if (config->getStrOption("store_mode") != "")
-        throw Error("store_mode in hydra.conf is deprecated, please use store_uri");
+        printMsg(lvlError, "store_mode in hydra.conf is deprecated, please use store_uri");
     if (config->getStrOption("binary_cache_dir") != "")
         printMsg(lvlError, "hydra.conf: binary_cache_dir is deprecated and ignored. use store_uri=file:// instead");
     if (config->getStrOption("binary_cache_s3_bucket") != "")
