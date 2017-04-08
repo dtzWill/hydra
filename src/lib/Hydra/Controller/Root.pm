@@ -9,6 +9,7 @@ use Hydra::Helper::CatalystUtils;
 use Digest::SHA1 qw(sha1_hex);
 use Nix::Store;
 use Nix::Config;
+use Nix::Utils;
 use Encode;
 use File::Basename;
 use JSON;
@@ -35,7 +36,7 @@ sub begin :Private {
     $c->stash->{nixVersion} = $ENV{"NIX_RELEASE"} || "<devel>";
     $c->stash->{curTime} = time;
     $c->stash->{logo} = defined $c->config->{hydra_logo} ? "/logo" : "";
-    $c->stash->{tracker} = $ENV{"HYDRA_TRACKER"};
+    $c->stash->{tracker} = readFile ($ENV{"HYDRA_TRACKER_FILE"} || "/dev/null");
     $c->stash->{flashMsg} = $c->flash->{flashMsg};
     $c->stash->{successMsg} = $c->flash->{successMsg};
 

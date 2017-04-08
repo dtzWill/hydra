@@ -27,10 +27,11 @@ let
     } // hydraEnv // cfg.extraEnv;
 
   serverEnv = env //
-    { HYDRA_TRACKER = cfg.tracker;
+    {
       COLUMNS = "80";
       PGPASSFILE = "${baseDir}/pgpass-www"; # grrr
-    } // (optionalAttrs cfg.debugServer { DBIC_TRACE = "1"; });
+    } // (optionalAttrs cfg.debugServer { DBIC_TRACE = "1"; })
+    // (optionalAttrs (cfg.trackerFile != null) { HYDRA_TRACKER_FILE = cfg.trackerFile; });
 
   localDB = "dbi:Pg:dbname=hydra;user=hydra;";
 
@@ -124,11 +125,11 @@ in
         '';
       };
 
-      tracker = mkOption {
-        type = types.str;
-        default = "";
+      trackerFile = mkOption {
+        type = types.nullOr types.path;
+        default = null;
         description = ''
-          Piece of HTML that is included on all pages.
+          File containing tracker HTML included on all pages.
         '';
       };
 
