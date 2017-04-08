@@ -207,19 +207,24 @@ sub download : Chained('buildChain') PathPart {
     # unbounded amount of space.
     if (!isValidPath($storePath)) {
         my $storeMode = $c->config->{store_mode} // "direct";
-        notFound($c, "File " . $product->path . " has disappeared.")
-            if $storeMode eq "direct";
-        my $url =
-            $storeMode eq "local-binary-cache" ? "file://" . $c->config->{binary_cache_dir} :
-            $storeMode eq "s3-binary-cache" ? "https://" . $c->config->{binary_cache_s3_bucket} . ".s3.amazonaws.com/" :
-            die;
-        my $args = "";
-        if (defined $c->config->{binary_cache_public_key_file}
-            && -r $c->config->{binary_cache_public_key_file})
-        {
-            $args = "--option binary-cache-public-keys " . read_file($c->config->{binary_cache_public_key_file});
+        if ($storeMode eq "direct") {
+            # Read from store_uri? Caused problems when tried it, nvm.
+            # Nevermind, just try realizing it JIC
+            system("nix-store --realise '$storePath' $args>/dev/null");
         }
-        system("nix-store --realise '$storePath' --option extra-binary-caches '$url' $args>/dev/null");
+        else {
+            my $url =
+                $storeMode eq "local-binary-cache" ? "file://" . $c->config->{binary_cache_dir} :
+                $storeMode eq "s3-binary-cache" ? "https://" . $c->config->{binary_cache_s3_bucket} . ".s3.amazonaws.com/" :
+                die;
+            my $args = "";
+            if (defined $c->config->{binary_cache_public_key_file}
+                && -r $c->config->{binary_cache_public_key_file})
+            {
+                $args = "--option binary-cache-public-keys " . read_file($c->config->{binary_cache_public_key_file});
+            }
+            system("nix-store --realise '$storePath' --option extra-binary-caches '$url' $args>/dev/null");
+        }
     }
 
     notFound($c, "File " . $product->path . " does not exist.") unless -e $product->path;
