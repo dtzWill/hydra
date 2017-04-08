@@ -209,8 +209,8 @@ sub download : Chained('buildChain') PathPart {
         my $storeMode = $c->config->{store_mode} // "direct";
         if ($storeMode eq "direct") {
             # Read from store_uri? Caused problems when tried it, nvm.
-            # Nevermind, just try realizing it JIC
-            system("nix-store --realise '$storePath' $args>/dev/null");
+            # Nevermind, just try realizing it and hope we have a binary cache or something.
+            system("nix-store --realise '$storePath' >/dev/null");
         }
         else {
             my $url =
