@@ -27,3 +27,4 @@ install-data-local: $(ZIPS)
 	cp -prvd $(srcdir)/static/js/* $(hydradir)/static/js
 	mkdir -p $(hydradir)/static/bootstrap
 	cp -prvd $(srcdir)/static/bootstrap/* $(hydradir)/static/bootstrap
+	cp -prvd ./bootstrap-cyborg-2.3.2.min.css $(hydradir)/static/bootstrap/css/bootstrap.min.css
