@@ -205,11 +205,12 @@ bool State::getQueuedBuilds(Connection & conn,
            if build A depends on build B with top-level step X, then X
            will be "accounted" to B in doBuildStep(). */
         for (auto & r : newSteps) {
-            auto i = newBuildsByPath.find(r->drvPath);
-            if (i == newBuildsByPath.end()) continue;
-            auto j = newBuildsByID.find(i->second);
-            if (j == newBuildsByID.end()) continue;
-            createBuild(j->second);
+            auto paths = newBuildsByPath.equal_range(r->drvPath);
+            for (auto i = paths.first; i != paths.second; ++i) {
+              auto j = newBuildsByID.find(i->second);
+              if (j == newBuildsByID.end()) continue;
+              createBuild(j->second);
+            }
         }
 
         /* If we didn't get a step, it means the step's outputs are
