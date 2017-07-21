@@ -113,6 +113,7 @@ bool State::getQueuedBuilds(Connection & conn,
             build->localPriority = row["priority"].as<int>();
             build->jobset = createJobset(txn, build->projectName, build->jobsetName);
 
+            printMsg(lvlTalkative, format("found build id=%1%") % id);
             newIDs.push_back(id);
             newBuildsByID[id] = build;
             newBuildsByPath.emplace(std::make_pair(build->drvPath, id));
