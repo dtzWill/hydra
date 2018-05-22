@@ -1,13 +1,16 @@
 { hydraSrc ? { outPath = ./.; revCount = 1234; rev = "abcdef"; }
 , officialRelease ? false
 , shell ? false
+# , nixpkgs ? <nixpkgs>
+# XXX: this isn't plumbed through hydra-module.nix, oh well
+, nixpkgs ? builtins.fetchGit { url = https://github.com/NixOS/nixpkgs; rev = "29bb31bd25a45ebe8a3500c4402665e89743b394"; }
 }:
-
-with import <nixpkgs/lib>;
 
 let
 
-  pkgs = import <nixpkgs> {};
+  pkgs = import nixpkgs {};
+in with pkgs.lib;
+let
 
   genAttrs' = genAttrs [ "x86_64-linux" /* "i686-linux" */ ];
 
@@ -37,7 +40,7 @@ rec {
 
   build = genAttrs' (system:
 
-    with import <nixpkgs> { inherit system; };
+    with import nixpkgs { inherit system; };
 
     let
 
@@ -174,7 +177,7 @@ rec {
     '';
 
   tests.install = genAttrs' (system:
-    with import <nixpkgs/nixos/lib/testing.nix> { inherit system; };
+    with import (nixpkgs + "/nixos/lib/testing.nix") { inherit system; };
     simpleTest {
       machine = hydraServer build.${system};
       testScript =
@@ -189,7 +192,7 @@ rec {
     });
 
   tests.api = genAttrs' (system:
-    with import <nixpkgs/nixos/lib/testing.nix> { inherit system; };
+    with import (nixpkgs + "nixos/lib/testing.nix") { inherit system; };
     simpleTest {
       machine = hydraServer build.${system};
       testScript =
