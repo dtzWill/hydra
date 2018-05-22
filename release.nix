@@ -95,6 +95,7 @@ rec {
             nix.perl-bindings
             git
             boehmgc
+            boost /* now needed by nix */
           ];
       };
 
@@ -111,6 +112,7 @@ rec {
           guile # optional, for Guile + Guix support
           perlDeps perl nix
           postgresql95 # for running the tests
+          boost /* now needed by nix */
         ];
 
       hydraPath = lib.makeBinPath (
