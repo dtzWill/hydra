@@ -165,7 +165,7 @@ State::StepResult State::doBuildStep(nix::ref<Store> destStore,
                 auto store = destStore.dynamic_pointer_cast<BinaryCacheStore>();
                 if (uploadLogsToBinaryCache && store && pathExists(result.logFile)) {
                     store->upsertFile("log/" + baseNameOf(step->drvPath), readFile(result.logFile), "text/plain; charset=utf-8");
-                    unlink(result.logFile.c_str());
+                    //unlink(result.logFile.c_str());
                 }
             } catch (...) {
                 ignoreException();
