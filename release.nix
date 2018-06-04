@@ -3,7 +3,7 @@
 , shell ? false
 # , nixpkgs ? <nixpkgs>
 # XXX: this isn't plumbed through hydra-module.nix, oh well
-, nixpkgs ? builtins.fetchGit { url = https://github.com/dtzWill/nixpkgs; ref = "update/nixUnstable-6208"; }
+, nixpkgs ? builtins.fetchGit { url = https://github.com/dtzWill/nixpkgs; ref = "experimental/hydra-nixunstable"; }
 }:
 
 let
